@@ -5,7 +5,7 @@ import Header from './_components/Header';
 export default function DashboardLayout({ children }) {
   return (
     <div>
-      <div className="md:w-64 fixed hidden md:block">
+      <div className="w-64 fixed md:block">
         <SideNav />
       </div>
       <div className="md:ml-64">
