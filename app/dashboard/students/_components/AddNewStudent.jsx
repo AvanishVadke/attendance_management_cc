@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 
-function AddNewStudent() {
+function AddNewStudent({ onStudentAdded }) {
   const [open, setOpen] = useState(false);
   const [years, setYears] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -62,10 +62,10 @@ function AddNewStudent() {
 
   const onSubmit = async (data) => {
     try {
-      setLoading(true);
-      const response = await GlobalApi.CreateStudent(data);
+      setLoading(true);      const response = await GlobalApi.CreateStudent(data);
       toast.success("Student added successfully!");
       handleClose();
+      if (onStudentAdded) onStudentAdded(); // Refresh the student list
       // You might want to trigger a refresh of the students list here
     } catch (error) {
       const errorMessage = error.response?.data?.error || "Failed to add student";

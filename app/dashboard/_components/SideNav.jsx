@@ -1,9 +1,10 @@
 "use client";
 import { GraduationCap, Hand, icons, LayoutIcon, Settings } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { useUser, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 function SideNav() {
   const { user } = useUser();
@@ -35,6 +36,12 @@ function SideNav() {
     },
   ];
 
+  const path = usePathname();
+  useEffect(() => {
+    console.log(path);
+    
+  }, [path]);
+
   return (
     <div className="border-r shadow-sm flex flex-col justify-between mb-1 h-screen">
       <div>
@@ -45,7 +52,7 @@ function SideNav() {
 
         {menuList.map((menu) => (
           <Link href={menu.path} key={menu.id}>
-            <h2 className="flex items-center gap-3 p-4 text-slate-500 hover:bg-primary cursor-pointer rounded-lg">
+            <h2 className={`flex items-center gap-3 p-4 text-slate-500 hover:bg-primary cursor-pointer rounded-lg`}>
               <menu.icons />
               {menu.name}
             </h2>
