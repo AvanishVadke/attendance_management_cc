@@ -7,25 +7,63 @@ import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { Button } from "@/components/ui/button";
 import { Search, TrashIcon } from "lucide-react";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-function StudentListTable({ studentList = [] }) {
+function StudentListTable({ studentList = [], loading, onDeleteStudent, deletingId }) {
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [rowData, setRowData] = useState([]);
 
   const [searchInput, setSearchInput] = useState();
 
-  const CustomButton = () => (
-  <div className="flex justify-center items-center h-full">
-    <Button
-      className="bg-red-500 hover:bg-red-700 text-white px-2.5 py-1.5 text-sm h-[35px] cursor-pointer"
-    >
-      <TrashIcon className="w-3.5 h-3.5 mr-1" />
-      Delete
-    </Button>
-  </div>
-);
+  const CustomButton = (props) => {
+    const studentId = props.data?.id;
+    const isDeleting = deletingId === studentId;
+    return (
+      <div className="flex justify-center items-center h-full">
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              className="bg-red-500 hover:bg-red-700 text-white px-2.5 py-1.5 text-sm h-[35px] cursor-pointer"
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <span className="flex items-center"><svg className="animate-spin h-4 w-4 mr-1 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>Deleting...</span>
+              ) : (
+                <><TrashIcon className="w-3.5 h-3.5 mr-1" />Delete</>
+              )}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete this student and remove their data from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+              <AlertDialogAction className="cursor-pointer" onClick={() => onDeleteStudent(studentId)} disabled={isDeleting}>
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    );
+  };
 
 
   const [colDefs] = useState([

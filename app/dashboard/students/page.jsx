@@ -4,10 +4,12 @@ import GlobalApi from '@/app/_services/GlobalApi';
 import { useEffect, useState } from 'react';
 import AddNewStudent from './_components/AddNewStudent';
 import StudentListTable from './_components/StudentListTable';
+import { toast } from "sonner";
 
 function Student() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
 
   const getStudentsList = async () => {
     try {
@@ -21,6 +23,20 @@ function Student() {
     }
   };
 
+  // Delete handler
+  const handleDeleteStudent = async (id) => {
+    setDeletingId(id);
+    try {
+      await GlobalApi.DeleteStudent(id);
+      toast.success('Student deleted successfully');
+      await getStudentsList();
+    } catch (error) {
+      toast.error('Failed to delete student');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   useEffect(() => {
     getStudentsList();
   }, []);
@@ -31,7 +47,7 @@ function Student() {
         Students
         <AddNewStudent onStudentAdded={getStudentsList} />
       </h2>
-      <StudentListTable studentList={students} loading={loading} />
+      <StudentListTable studentList={students} loading={loading} onDeleteStudent={handleDeleteStudent} deletingId={deletingId} />
     </div>
   );
 }
