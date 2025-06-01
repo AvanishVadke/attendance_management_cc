@@ -35,16 +35,18 @@ model StudentYearDivision {
 }
 
 model Student {
-  id      Int     @id @default(autoincrement())
-  name    String 
-  year   Year  
-  division Division 
+  id        Int         @id @default(autoincrement())
+  name      String
+  year      Year
+  division  Division
+  attendances Attendance[]
 }
 
-model Attendance {
+model Attendance {  
   id        Int      @id @default(autoincrement())
   studentId Int
   present   Boolean  @default(false)
   day       Int
   date      String
+  student   Student  @relation(fields: [studentId], references: [id])
 }

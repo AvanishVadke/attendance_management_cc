@@ -6,15 +6,48 @@ import DivisionSelect from "@/app/_components/DivisionSelect";
 import { Button } from "@/components/ui/button";
 import { SearchIcon } from "lucide-react";
 import React, { useState } from "react";
+import GlobalApi from "@/app/_services/GlobalApi";
+import moment from "moment";
+import AttendanceGrid from "./_components/AttendanceGrid";
 
-function Attendace() {
+function Attendance() {
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedDivision, setSelectedDivision] = useState("");
+  const [attendanceList, setAttendanceList] = useState([]);
 
-  const [selectedMonth, setSelectedMonth] = useState();
-  const [selectedYear, setSelectedYear] = useState();
-  const [selectedDivision, setSelectedDivision] = useState();
-  
   const onSearchHandler = () => {
-
+    console.log('Year:', selectedYear, 'Month:', selectedMonth, 'Division:', selectedDivision);
+    const month = selectedMonth ? moment(selectedMonth).format("MM") : undefined;
+    GlobalApi.getAttendanceList(selectedYear, selectedDivision, month)
+      .then(res => {
+        // Fetch all students for the selected year/division
+        GlobalApi.getAllStudents().then(stuRes => {
+          const students = (stuRes.data || []).filter(
+            s => s.year === selectedYear && s.division === selectedDivision
+          );
+          // Merge attendance with student data for the grid
+          const attendanceData = res.data || [];
+          // Build a map: studentId -> [{...attendance records}]
+          const attendanceMap = {};
+          attendanceData.forEach(a => {
+            if (!attendanceMap[a.studentId]) attendanceMap[a.studentId] = [];
+            attendanceMap[a.studentId].push(a);
+          });
+          // Build the list for the grid
+          const attendanceList = students.map(student => {
+            return {
+              ...student,
+              attendances: attendanceMap[student.id] || []
+            };
+          });
+          setAttendanceList(attendanceList);
+          console.log('attendanceList:', attendanceList);
+        });
+      })
+      .catch(err => {
+        console.error('Attendance API error:', err);
+      });
   }
 
   return (
@@ -36,8 +69,14 @@ function Attendace() {
         </div>
         <Button onClick = {()=> onSearchHandler()}> <SearchIcon/> Search</Button>
       </div>
+
+      <AttendanceGrid 
+        attendanceList={attendanceList}
+        selectedMonth={selectedMonth}
+      />
+
     </div>
   );
 }
 
-export default Attendace;
+export default Attendance;
