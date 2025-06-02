@@ -18,13 +18,12 @@ function AttendanceGrid({ attendanceList, selectedMonth, onAttendanceChanged }) 
     let year, month;
     if (selectedMonth && moment(selectedMonth).isValid()) {
       year = parseInt(moment(selectedMonth).format("YYYY"), 10);
-      month = parseInt(moment(selectedMonth).format("MM"), 10) - 1;
+      month = parseInt(moment(selectedMonth).format("MM"), 10); // 1-based
     } else {
-      // fallback to current month/year if not provided
       year = moment().year();
-      month = moment().month();
+      month = moment().month() + 1; // 1-based
     }
-    const numberOfDays = new Date(year, month + 1, 0).getDate();
+    const numberOfDays = new Date(year, month, 0).getDate(); // month is 1-based
     const daysArray = Array.from({ length: numberOfDays }, (_, i) => i + 1);
 
     setColDefs([
@@ -40,20 +39,17 @@ function AttendanceGrid({ attendanceList, selectedMonth, onAttendanceChanged }) 
     const userList = (attendanceList || []).map((student) => {
       const row = { studentId: student.id, name: student.name };
       daysArray.forEach((day) => {
-        const present = (student.attendances || []).some(
-          (a) => {
-            // Only match by ISO date and day
-            const attDate = moment(a.date, "YYYY-MM-DD");
-            return (
-              a.day === day &&
-              attDate.isValid() &&
-              attDate.date() === day &&
-              attDate.month() === month &&
-              attDate.year() === year &&
-              a.present === true
-            );
-          }
-        );
+        const present = (student.attendances || []).some((a) => {
+          const attDate = moment(a.date, "YYYY-MM-DD");
+          return (
+            a.day === day &&
+            attDate.isValid() &&
+            attDate.date() === day &&
+            (attDate.month() + 1) === month && // 1-based
+            attDate.year() === year &&
+            a.present === true
+          );
+        });
         row[day] = present;
       });
       return row;
