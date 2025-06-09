@@ -28,30 +28,21 @@ function SideNav() {
       icons: Hand,
       path: "/dashboard/attendance",
     },
-    {
-      id: 4,
-      name: "Settings",
-      icons: Settings,
-      path: "/dashboard/settings",
-    },
   ];
-
   const path = usePathname();
-  useEffect(() => {
-    console.log(path);
-  }, [path]);
 
   return (
     <div className="border-r shadow-sm flex flex-col justify-between mb-1 h-screen">
-      <div>
-        <div className="p-5 mb">
+      <div>        <div className="p-5 mb">
           <Image
             priority={true}
             src="/cc.png"
             width={180}
             height={50}
             alt="logo"
+            style={{ width: "auto", height: "auto" }}
           />
+          
         </div>
         <hr className="my-5" />
 

@@ -13,10 +13,12 @@ function getYearMonth(dateStr) {
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const year = searchParams.get('year');
-    const division = searchParams.get('division');
-    const month = searchParams.get('month'); // month as number (1-12)
-    const selectedYear = searchParams.get('selectedYear'); // optional, for clarity
+    const year = searchParams.get('year'); // SE, TE, BE
+    const division = searchParams.get('division'); // A, B, C
+    const month = searchParams.get('month'); // month as string (01-12)
+    const academicYear = searchParams.get('academicYear') || new Date().getFullYear().toString(); // actual year, defaults to current year
+
+    console.log('Attendance API called with:', { year, division, month, academicYear });
 
     let studentWhere = {};
     if (year) studentWhere.year = year;
@@ -34,14 +36,22 @@ export async function GET(request) {
       }
     });
 
-    // Filter by month and year using ISO format
+    console.log(`Found ${attendance.length} attendance records before filtering`);
+
+    // Filter by month and academic year using ISO format
     let filtered = attendance;
-    if (month && year) {
+    if (month && academicYear) {
       const monthStr = month.padStart(2, '0');
-      const yearMonth = `${year}-${monthStr}`;
-      filtered = attendance.filter(a => getYearMonth(a.date) === yearMonth);
+      const yearMonth = `${academicYear}-${monthStr}`;
+      console.log('Filtering by yearMonth:', yearMonth);
+      filtered = attendance.filter(a => {
+        const attendanceYearMonth = getYearMonth(a.date);
+        console.log(`Comparing ${attendanceYearMonth} with ${yearMonth}`);
+        return attendanceYearMonth === yearMonth;
+      });
     }
 
+    console.log(`Filtered to ${filtered.length} attendance records`);
     return NextResponse.json(filtered);
   } catch (error) {
     console.error('Error fetching attendance:', error);

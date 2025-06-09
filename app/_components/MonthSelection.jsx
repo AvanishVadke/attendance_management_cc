@@ -8,13 +8,20 @@ import {
 import { addMonths } from "date-fns";
 import { CalendarDaysIcon } from "lucide-react";
 import moment from "moment/moment";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar"
 
 function MonthSelection({ selectedMonth }) {
   const today = new Date();
   const nextMonth = addMonths(new Date(), 0);
   const [month, setMonth] = useState(nextMonth);
+
+  // Pass the default month to parent on component mount
+  useEffect(() => {
+    if (selectedMonth) {
+      selectedMonth(nextMonth);
+    }
+  }, []);
 
   return (
     <div>

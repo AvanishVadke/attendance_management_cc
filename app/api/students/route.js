@@ -7,7 +7,16 @@ const prisma = new PrismaClient();
 // Get all students
 export async function GET(request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const year = searchParams.get('year'); // SE, TE, BE
+    const division = searchParams.get('division'); // A, B, C
+
+    let whereClause = {};
+    if (year) whereClause.year = year;
+    if (division) whereClause.division = division;
+
     const students = await prisma.student.findMany({
+      where: whereClause,
       orderBy: {
         name: 'asc'
       }

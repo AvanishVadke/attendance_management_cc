@@ -4,6 +4,7 @@ import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import moment from "moment";
 import GlobalApi from "@/app/_services/GlobalApi";
 import { toast } from "sonner";
+import { getUniqueRecord } from "@/app/_services/services";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -34,9 +35,7 @@ function AttendanceGrid({ attendanceList, selectedMonth, onAttendanceChanged }) 
         width: 80,
         editable: true,
       })),
-    ]);
-
-    const userList = (attendanceList || []).map((student) => {
+    ]);    const userList = (attendanceList || []).map((student) => {
       const row = { studentId: student.id, name: student.name };
       daysArray.forEach((day) => {
         const present = (student.attendances || []).some((a) => {
@@ -54,7 +53,10 @@ function AttendanceGrid({ attendanceList, selectedMonth, onAttendanceChanged }) 
       });
       return row;
     });
-    setRowData(userList);
+    
+    // Use getUniqueRecord to get unique students
+    const uniqueStudents = getUniqueRecord(userList);
+    setRowData(uniqueStudents);
   }, [attendanceList, selectedMonth]);
 
   const onMarkAttendance = (day, studentId, presentStatus) => {
