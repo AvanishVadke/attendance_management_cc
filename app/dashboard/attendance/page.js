@@ -49,32 +49,41 @@ function Attendance() {
         console.error('Attendance API error:', err);
       });
   }
-
   return (
-    <div className="p-10">
-      <h2 className="text-2xl font-bold">Attendance</h2>
+    <div className="space-y-6">
+      {/* Header */}
+      <h2 className="text-2xl md:text-3xl font-bold">Attendance</h2>
 
-      <div className="flex gap-4 p-3 border rounded-lg shadow-sm my-5 items-center">
-        <div className="flex gap-2 items-center">
-          <label>Select Month:</label>
-          <MonthSelection selectedMonth={(value) => setSelectedMonth(value)}/>
+      {/* Search Controls - responsive layout */}
+      <div className="bg-card p-4 md:p-6 border rounded-lg shadow-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Select Month:</label>
+            <MonthSelection selectedMonth={(value) => setSelectedMonth(value)}/>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Select Year:</label>
+            <YearSelect value={selectedYear} onChange={setSelectedYear} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Select Division:</label>
+            <DivisionSelect value={selectedDivision} onChange={setSelectedDivision} year={selectedYear} />
+          </div>
+          <Button onClick={() => onSearchHandler()} className="w-full sm:w-auto">
+            <SearchIcon className="w-4 h-4 mr-2" />
+            Search
+          </Button>
         </div>
-        <div className="flex gap-2 items-center">
-          <label>Select Year:</label>
-          <YearSelect value={selectedYear} onChange={setSelectedYear} />
-        </div>
-        <div className="flex gap-2 items-center">
-          <label>Select Division:</label>
-          <DivisionSelect value={selectedDivision} onChange={setSelectedDivision} year={selectedYear} />
-        </div>
-        <Button onClick = {()=> onSearchHandler()}> <SearchIcon/> Search</Button>
       </div>
 
-      <AttendanceGrid 
-        attendanceList={attendanceList}
-        selectedMonth={selectedMonth}
-      />
-
+      {/* Attendance Grid */}
+      <div className="bg-card border rounded-lg overflow-hidden">
+        <AttendanceGrid 
+          attendanceList={attendanceList}
+          selectedMonth={selectedMonth}
+          onAttendanceChanged={() => onSearchHandler()}
+        />
+      </div>
     </div>
   );
 }

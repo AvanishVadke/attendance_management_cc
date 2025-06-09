@@ -56,30 +56,42 @@ function Dashboard() {
     try {
       // Fix parameter order: year (TE/SE/BE), division, month, academicYear
       const res = await GlobalApi.TotalPresentCountByDay(selectedYear, selectedDivision, month, academicYear);
-      setDailyAttendanceStats(res.data || []);    } catch (err) {
+            setDailyAttendanceStats(res.data || []);
+    } catch (err) {
       setDailyAttendanceStats([]);
     }
   }
+  
   return (
-    <div className="p-10">
-      <div className="flex justify-between items-center">
-        <h2 className="font-bold">Dashboard</h2>
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <h2 className="text-2xl md:text-3xl font-bold">Dashboard</h2>
 
-      <div className="flex items-center gap-4">
-        <MonthSelection selectedMonth={setSelectedMonth}/>
-        <YearSelect value={selectedYear} onChange={setSelectedYear} />
-        <DivisionSelect value={selectedDivision} onChange={setSelectedDivision} year={selectedYear} />
-      </div>
-      </div>        <StatusList attendanceList ={attendanceList} />      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-        <div className="md:col-span-2">
-        <BarChart 
-          attendanceList={attendanceList} 
-          dailyAttendanceStats={dailyAttendanceStats}
-          selectedYear={selectedYear}
-          selectedDivision={selectedDivision}
-        />
+        {/* Controls - responsive layout */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-2">
+            <MonthSelection selectedMonth={setSelectedMonth}/>
+            <YearSelect value={selectedYear} onChange={setSelectedYear} />
+            <DivisionSelect value={selectedDivision} onChange={setSelectedDivision} year={selectedYear} />
+          </div>
         </div>
-        <div className="md:col-span-1">
+      </div>
+      
+      {/* Status Cards */}
+      <StatusList attendanceList={attendanceList} />
+      
+      {/* Charts Section - responsive grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="xl:col-span-2">
+          <BarChart 
+            attendanceList={attendanceList} 
+            dailyAttendanceStats={dailyAttendanceStats}
+            selectedYear={selectedYear}
+            selectedDivision={selectedDivision}
+          />
+        </div>
+        <div className="xl:col-span-1">
           <AttendancePieChart 
             attendanceList={attendanceList}
             selectedYear={selectedYear}
@@ -87,7 +99,6 @@ function Dashboard() {
           />
         </div>
       </div>
-      
     </div>
   )
 }

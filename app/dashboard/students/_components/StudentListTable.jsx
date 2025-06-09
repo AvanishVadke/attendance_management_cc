@@ -65,21 +65,55 @@ function StudentListTable({ studentList = [], loading, onDeleteStudent, deleting
     );
   };
 
-
   const [colDefs] = useState([
-    { field: "id", filter: true },
-    { field: "name", filter: true },
-    { field: "year", filter: true },
-    { field: "division", headerName: "Div", filter: true },
-    { field: "action", cellRenderer: CustomButton },
+    { 
+      field: "id", 
+      filter: true,
+      width: 80,
+      minWidth: 60,
+      cellStyle: { fontSize: '0.875rem' }
+    },
+    { 
+      field: "name", 
+      filter: true,
+      flex: 2,
+      minWidth: 150,
+      cellStyle: { fontSize: '0.875rem' }
+    },
+    { 
+      field: "year", 
+      filter: true,
+      width: 100,
+      minWidth: 80,
+      cellStyle: { fontSize: '0.875rem' }
+    },
+    { 
+      field: "division", 
+      headerName: "Div", 
+      filter: true,
+      width: 80,
+      minWidth: 60,
+      cellStyle: { fontSize: '0.875rem' }
+    },
+    { 
+      field: "action", 
+      cellRenderer: CustomButton,
+      width: 120,
+      minWidth: 100,
+      suppressSizeToFit: true
+    },
   ]);
-
   const defaultColDef = {
     flex: 1,
-    minWidth: 100,
+    minWidth: 80,
     resizable: true,
     sortable: true,
     filter: true,
+    suppressSizeToFit: false,
+    cellStyle: { 
+      padding: '8px 12px',
+      fontSize: '0.875rem'
+    }
   };
 
   useEffect(() => {
@@ -95,9 +129,8 @@ function StudentListTable({ studentList = [], loading, onDeleteStudent, deleting
   const gridTheme = "ag-theme-alpine";
   const themeMode = currentTheme === "dark" ? "dark" : "light";
 
-  return (
-    <div
-      className={`${gridTheme} rounded-2xl p-6 w-full min-h-[600px] overflow-auto bg-black`}
+  return (    <div
+      className={`${gridTheme} rounded-2xl p-3 sm:p-6 w-full min-h-[400px] sm:min-h-[600px] overflow-auto bg-black`}
       data-ag-theme-mode={themeMode}
     >
       <style>{`
@@ -113,13 +146,13 @@ function StudentListTable({ studentList = [], loading, onDeleteStudent, deleting
           background: #18181b !important;
           color: #fff !important;
           font-weight: 600;
-          font-size: 1rem;
+          font-size: 0.875rem;
           border-radius: 0.75rem 0.75rem 0 0;
         }
         .ag-row {
           background: #000 !important;
           color: #fff !important;
-          font-size: 0.95rem;
+          font-size: 0.875rem;
           transition: background 0.2s;
         }
         .ag-row-hover {
@@ -130,10 +163,11 @@ function StudentListTable({ studentList = [], loading, onDeleteStudent, deleting
           color: #fff !important;
           padding: 0.5rem 0.75rem !important;
           border: none !important;
+          font-size: 0.875rem !important;
         }
         .ag-header-cell {
           border: none !important;
-          padding: 1rem 1rem !important;
+          padding: 0.75rem 0.75rem !important;
         }
         .ag-row-selected {
           background: #222 !important;
@@ -147,21 +181,38 @@ function StudentListTable({ studentList = [], loading, onDeleteStudent, deleting
           color: #fff !important;
           border-radius: 0 0 0.75rem 0.75rem;
         }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 640px) {
+          .ag-header {
+            font-size: 0.75rem;
+          }
+          .ag-cell {
+            padding: 0.375rem 0.5rem !important;
+            font-size: 0.75rem !important;
+          }
+          .ag-header-cell {
+            padding: 0.5rem 0.5rem !important;
+          }
+          .ag-row {
+            font-size: 0.75rem;
+          }
+        }
       `}</style>
 
       {/* Search Bar */}
       <div className="relative max-w-xs w-full mb-4">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
         <input
           type="text"
           placeholder="Search..."
-          className="w-full bg-[#18181b] border border-[#232326] text-white placeholder:text-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#333]"
+          className="w-full bg-[#18181b] border border-[#232326] text-white placeholder:text-gray-400 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#333]"
           onChange={(event) => setSearchInput(event.target.value)}
         />
       </div>
 
       {/* Grid */}
-      <div className="ag-grid-container">
+      <div className="ag-grid-container overflow-x-auto">
         <AgGridReact
           rowData={rowData}
           columnDefs={colDefs}
@@ -171,8 +222,10 @@ function StudentListTable({ studentList = [], loading, onDeleteStudent, deleting
           pagination={true}
           paginationPageSize={10}
           paginationPageSizeSelectors={[25, 50, 100, 200]}
-          rowHeight={56}
+          rowHeight={48}
           quickFilterText={searchInput}
+          suppressHorizontalScroll={false}
+          maintainColumnOrder={true}
         />
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { ClerkProvider, SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -21,7 +22,29 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+        variables: {
+          colorPrimary: "#3b82f6",
+          colorBackground: "#000000",
+          colorInputBackground: "#111111",
+          colorInputText: "#ffffff",
+        },
+        elements: {
+          formButtonPrimary: "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700",
+          card: "bg-black border border-gray-800",
+          headerTitle: "text-white",
+          headerSubtitle: "text-gray-300",
+          socialButtonsBlockButton: "border-gray-700 text-white hover:bg-gray-800",
+          formFieldLabel: "text-gray-300",
+          footerActionText: "text-gray-400",
+          footerActionLink: "text-blue-400 hover:text-blue-300",
+          dividerLine: "bg-gray-700",
+          dividerText: "text-gray-400",
+        }
+      }}
+    >
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}

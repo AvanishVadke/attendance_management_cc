@@ -40,14 +40,23 @@ function Student() {
   useEffect(() => {
     getStudentsList();
   }, []);
-
   return (
-    <div className="p-7">
-      <h2 className="font-bold text-2xl flex justify-between items-center mb-7">
-        Students
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <h2 className="text-2xl md:text-3xl font-bold">Students</h2>
         <AddNewStudent onStudentAdded={getStudentsList} />
-      </h2>
-      <StudentListTable studentList={students} loading={loading} onDeleteStudent={handleDeleteStudent} deletingId={deletingId} />
+      </div>
+      
+      {/* Students Table */}
+      <div className="bg-card rounded-lg border">
+        <StudentListTable 
+          studentList={students} 
+          loading={loading} 
+          onDeleteStudent={handleDeleteStudent} 
+          deletingId={deletingId} 
+        />
+      </div>
     </div>
   );
 }

@@ -100,17 +100,14 @@ function AttendanceGrid({ attendanceList, selectedMonth, onAttendanceChanged }) 
           });
       }
     }
-  };
-
-  return (
-    <div>
+  };  return (
+    <div className="w-full">
       <div
-        className="ag-theme-quartz rounded-2xl p-6 w-full min-h-[400px] overflow-auto bg-black"
+        className="ag-theme-alpine rounded-2xl p-3 md:p-6 w-full min-h-[400px] overflow-auto bg-black"
         style={{ height: 500 }}
-        data-ag-theme-mode="dark"
       >
         <style>{`
-                    .ag-theme-quartz, .ag-theme-quartz-dark {
+                    .ag-theme-alpine, .ag-theme-alpine-dark {
                         background: #000 !important;
                         border-radius: 1rem !important;
                     }
@@ -122,17 +119,55 @@ function AttendanceGrid({ attendanceList, selectedMonth, onAttendanceChanged }) 
                         background: #18181b !important;
                         color: #fff !important;
                         font-weight: 600;
-                        font-size: 1rem;
+                        font-size: 0.875rem;
+                        border-radius: 0.75rem 0.75rem 0 0;
                     }
                     .ag-row {
-                        background: #18181b !important;
+                        background: #000 !important;
                         color: #fff !important;
-                        font-size: 1rem;
-                        border-radius: 0.5rem !important;
-                        margin-bottom: 0.5rem !important;
+                        font-size: 0.875rem;
+                        transition: background 0.2s;
+                    }
+                    .ag-row-hover {
+                        background: #18181b !important;
+                    }
+                    .ag-cell {
+                        background: #000 !important;
+                        color: #fff !important;
+                        padding: 0.5rem 0.75rem !important;
+                        border: none !important;
+                        font-size: 0.875rem !important;
+                    }
+                    .ag-header-cell {
+                        border: none !important;
+                        padding: 0.75rem 0.75rem !important;
                     }
                     .ag-row-selected {
-                        background: #27272a !important;
+                        background: #222 !important;
+                        color: #fff !important;
+                    }
+                    .ag-header-cell-label {
+                        color: #fff !important;
+                    }
+                    .ag-paging-panel {
+                        background: #18181b !important;
+                        color: #fff !important;
+                        border-radius: 0 0 0.75rem 0.75rem;
+                    }
+                    @media (max-width: 768px) {
+                        .ag-header {
+                            font-size: 0.75rem;
+                        }
+                        .ag-cell {
+                            padding: 0.375rem 0.5rem !important;
+                            font-size: 0.75rem !important;
+                        }
+                        .ag-header-cell {
+                            padding: 0.5rem 0.5rem !important;
+                        }
+                        .ag-row {
+                            font-size: 0.75rem;
+                        }
                     }
                 `}</style>
         <AgGridReact
@@ -142,6 +177,7 @@ function AttendanceGrid({ attendanceList, selectedMonth, onAttendanceChanged }) 
           pagination={true}
           paginationPageSize={10}
           paginationPageSizeSelectors={[25, 50, 100, 200]}
+          domLayout="autoHeight"
         />
       </div>
     </div>
