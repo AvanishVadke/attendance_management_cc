@@ -1,8 +1,6 @@
 // app/api/student-year-division/route.js
-import { PrismaClient } from '@/lib/generated/prisma';
+import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-
-const prisma = new PrismaClient();
 
 // Get all year-division combinations
 export async function GET(request) {

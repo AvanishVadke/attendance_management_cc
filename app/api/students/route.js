@@ -1,8 +1,6 @@
 // app/api/students/route.js
-import { PrismaClient } from '@/lib/generated/prisma';
+import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-
-const prisma = new PrismaClient();
 
 // Get all students
 export async function GET(request) {
